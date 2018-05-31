@@ -69,7 +69,8 @@ const styles = theme => ({
   },
   content: {
     height: "100%",
-    padding: theme.spacing.unit * 4
+    padding: `${theme.mixins.toolbar.minHeight +
+      theme.spacing.unit * 4}px ${theme.spacing.unit * 4}px`
   },
   avatar: {
     height: 50,

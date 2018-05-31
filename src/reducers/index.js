@@ -16,7 +16,10 @@ import {
   CLEAR_ERROR,
   GET_PROFILE_REQUEST,
   GET_PROFILE_SUCCESS,
-  GET_PROFILE_FAILURE
+  GET_PROFILE_FAILURE,
+  GET_DASHBOARD_REQUEST,
+  GET_DASHBOARD_SUCCESS,
+  GET_DASHBOARD_FAILURE
 } from "../constants/service";
 
 const defaultState = {
@@ -29,8 +32,10 @@ const defaultState = {
   userNameCheckFail: false,
   isAuthenticated: false,
   gettingProfile: false,
+  gettingDashboard: false,
   error: null,
-  user: {}
+  user: {},
+  dashboard: {}
 };
 
 const rootReducer = (
@@ -39,7 +44,7 @@ const rootReducer = (
   },
   action
 ) => {
-  const { type, error, userNameCheckFail, user } = action;
+  const { type, error, userNameCheckFail, user, dashboard } = action;
   switch (type) {
     case SIGNUP_REQUEST:
       return {
@@ -158,6 +163,24 @@ const rootReducer = (
       return {
         ...state,
         gettingProfile: false,
+        error
+      };
+
+    case GET_DASHBOARD_REQUEST:
+      return {
+        ...state,
+        gettingDashboard: true
+      };
+    case GET_DASHBOARD_SUCCESS:
+      return {
+        ...state,
+        dashboard,
+        gettingDashboard: false
+      };
+    case GET_DASHBOARD_FAILURE:
+      return {
+        ...state,
+        gettingDashboard: false,
         error
       };
 

@@ -19,7 +19,7 @@ import {
   checkToken,
   saveUsername
   //   getProfile
-} from "../services/auth";
+} from "../services/data";
 
 function* chekTokenFlow() {
   const token = getToken();
@@ -86,9 +86,8 @@ function* signupFlow(action) {
 }
 
 function* saveUsernameFlow(action) {
-  const token = getToken();
   const { username } = action;
-  const response = yield call(saveUsername, token, username);
+  const response = yield call(saveUsername, username);
   const { serviseStatus, error = null } = response;
 
   switch (serviseStatus) {

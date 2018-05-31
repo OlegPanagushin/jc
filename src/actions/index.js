@@ -5,7 +5,8 @@ import {
   SAVE_USERNAME_REQUEST,
   GET_PROFILE_REQUEST,
   SET_ERROR,
-  CLEAR_ERROR
+  CLEAR_ERROR,
+  GET_DASHBOARD_REQUEST
 } from "../constants/service";
 
 export function signupRequest(email, firstName, username) {
@@ -39,6 +40,12 @@ export function logout() {
 export function getUserProfile() {
   return {
     type: GET_PROFILE_REQUEST
+  };
+}
+
+export function getDashboard() {
+  return {
+    type: GET_DASHBOARD_REQUEST
   };
 }
 

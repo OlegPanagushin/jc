@@ -4,6 +4,7 @@ const TOKEN_NAME = "j-challenge-auth-token";
 
 export const getToken = () => {
   const item = localStorage.getItem(TOKEN_NAME);
+  console.log("getToken", item);
   if (!item) return null;
 
   const record = JSON.parse(item);
@@ -18,6 +19,7 @@ export const getToken = () => {
 };
 
 export const setToken = token => {
+  console.log("setToken", token);
   const record = {
     token,
     timestamp: moment()
@@ -27,4 +29,7 @@ export const setToken = token => {
   localStorage.setItem(TOKEN_NAME, JSON.stringify(record));
 };
 
-export const removeToken = () => localStorage.removeItem(TOKEN_NAME);
+export const removeToken = () => {
+  console.log("removeToken");
+  localStorage.removeItem(TOKEN_NAME);
+};
