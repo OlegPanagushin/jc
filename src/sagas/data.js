@@ -48,15 +48,15 @@ function* getProfileFlow() {
 
 function* getDasboardFlow(action) {
   const response = yield call(getDashboard, action.group);
-  const { serviseStatus, error = null, ...rest } = response;
+  const { serviseStatus, error = null, ...data } = response;
 
   switch (serviseStatus) {
     case GET_DASHBOARD_SUCCESS: //ok -> set isAuthorize
       yield put({
         type: GET_DASHBOARD_SUCCESS,
-        dashboard: {
-          ...rest
-        }
+        post: data.post,
+        comments: data.comments,
+        stat: data.stat
       });
       break;
     case LOGOUT_REQUEST: //error -> logout(delete token)

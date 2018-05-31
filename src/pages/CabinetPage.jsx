@@ -27,113 +27,125 @@ import ConfirmationDialog from "../components/ConfirmationDialog";
 
 const drawerWidth = 260;
 
-const styles = theme => ({
-  page: {
-    display: "flex",
-    height: "100%",
-    width: "100%"
-  },
-  nav: {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    height: "100%",
-    width: drawerWidth
-  },
-  textColor: {
-    color: theme.palette.primary.contrastText
-  },
-  link: {
-    color: theme.palette.primary.contrastText,
-    transition: theme.transitions.create(["background", "color"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    "& h3": {
-      color: "inherit"
-    }
-  },
-  currentLink: {
-    background: theme.palette.primary.contrastText,
-    color: theme.palette.primary.main,
-    cursor: "default",
-    pointerEvents: "none",
-    "&:hover": {
+const styles = theme => {
+  const unit = theme.spacing.unit;
+
+  return {
+    page: {
+      display: "flex",
+      height: "100%",
+      minWidth: 1200,
+      width: "100%"
+    },
+    nav: {
+      background: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      height: "100%",
+      width: drawerWidth
+    },
+    textColor: {
       color: theme.palette.primary.contrastText
+    },
+    link: {
+      color: theme.palette.primary.contrastText,
+      transition: theme.transitions.create(["background", "color"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      }),
+      "& h3": {
+        color: "inherit"
+      }
+    },
+    currentLink: {
+      background: theme.palette.primary.contrastText,
+      color: theme.palette.primary.main,
+      cursor: "default",
+      pointerEvents: "none",
+      "&:hover": {
+        color: theme.palette.primary.contrastText
+      }
+    },
+    linkIcon: {
+      color: "inherit"
+    },
+    linkText: {
+      color: "inherit"
+    },
+    content: {
+      background: theme.palette.background.default,
+      height: "100%",
+      paddingTop: 64,
+      width: "100%"
+    },
+    scrollable: {
+      height: "100%",
+      overflow: "auto",
+      padding: `${unit * 3}px`,
+      position: "relative"
+    },
+    avatar: {
+      height: 50,
+      width: 50,
+      transition: theme.transitions.create(["width", "height"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      })
+    },
+    avatarCondensed: {
+      height: "1em",
+      width: "1em"
+    },
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(["width", "margin"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      })
+    },
+    appBarShift: {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(["width", "margin"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen
+      })
+    },
+    menuButton: {
+      marginLeft: 12,
+      marginRight: 36
+    },
+    hide: {
+      display: "none"
+    },
+    drawerPaper: {
+      overflowX: "hidden",
+      position: "relative",
+      whiteSpace: "nowrap",
+      width: drawerWidth,
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen
+      })
+    },
+    drawerPaperClose: {
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      }),
+      width: unit * 7,
+      [theme.breakpoints.up("sm")]: {
+        width: unit * 9
+      }
+    },
+    toolbar: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      padding: "0 8px",
+      ...theme.mixins.toolbar
     }
-  },
-  linkIcon: {
-    color: "inherit"
-  },
-  linkText: {
-    color: "inherit"
-  },
-  content: {
-    height: "100%",
-    padding: `${theme.mixins.toolbar.minHeight +
-      theme.spacing.unit * 4}px ${theme.spacing.unit * 4}px`
-  },
-  avatar: {
-    height: 50,
-    width: 50,
-    transition: theme.transitions.create(["width", "height"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  avatarCondensed: {
-    height: "1em",
-    width: "1em"
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 36
-  },
-  hide: {
-    display: "none"
-  },
-  drawerPaper: {
-    overflowX: "hidden",
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerPaperClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9
-    }
-  },
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-    ...theme.mixins.toolbar
-  }
-});
+  };
+};
 
 function isAbsoluteUrl(url) {
   if (!url) return false;
@@ -142,6 +154,15 @@ function isAbsoluteUrl(url) {
 }
 
 class CabinetPage extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    render: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    logout: PropTypes.func.isRequired,
+    getUserProfile: PropTypes.func.isRequired,
+    avatar: PropTypes.string
+  };
+
   state = {
     drawerOpen: false,
     confirmLogout: false
@@ -293,20 +314,13 @@ class CabinetPage extends React.Component {
           open={confirmLogout}
           onClose={this.handleConfirmClose}
         />
-        <main className={classes.content}>{render()}</main>
+        <main className={classes.content}>
+          <div className={classes.scrollable}>{render()}</div>
+        </main>
       </div>
     );
   }
 }
-
-CabinetPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  render: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  logout: PropTypes.func.isRequired,
-  getUserProfile: PropTypes.func.isRequired,
-  avatar: PropTypes.string
-};
 
 export default connect(
   state => {

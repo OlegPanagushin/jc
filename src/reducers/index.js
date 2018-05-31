@@ -35,7 +35,9 @@ const defaultState = {
   gettingDashboard: false,
   error: null,
   user: {},
-  dashboard: {}
+  post: {},
+  stat: [],
+  comments: []
 };
 
 const rootReducer = (
@@ -44,7 +46,7 @@ const rootReducer = (
   },
   action
 ) => {
-  const { type, error, userNameCheckFail, user, dashboard } = action;
+  const { type, error, userNameCheckFail, user, post, stat, comments } = action;
   switch (type) {
     case SIGNUP_REQUEST:
       return {
@@ -174,7 +176,9 @@ const rootReducer = (
     case GET_DASHBOARD_SUCCESS:
       return {
         ...state,
-        dashboard,
+        stat,
+        post,
+        comments,
         gettingDashboard: false
       };
     case GET_DASHBOARD_FAILURE:
