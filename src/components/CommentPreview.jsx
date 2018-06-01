@@ -18,7 +18,8 @@ const styles = theme => ({
     textDecoration: "none   "
   },
   commentTextBlock: {
-    padding: `${theme.spacing.unit * 2}px 0 0`
+    padding: `${theme.spacing.unit * 2}px 0 0`,
+    width: "100%"
   },
   commentText: {
     display: "block"
@@ -66,7 +67,10 @@ class CommentPreview extends React.Component {
               {name}
             </a>
           }
-          secondary={moment.unix(date).fromNow()}
+          secondary={moment
+            .unix(date)
+            .local()
+            .fromNow()}
         />
         <ListItemText
           className={classes.commentTextBlock}

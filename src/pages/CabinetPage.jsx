@@ -72,7 +72,6 @@ const styles = theme => {
       color: "inherit"
     },
     content: {
-      background: theme.palette.background.default,
       height: "100%",
       paddingTop: 64,
       width: "100%"

@@ -13,9 +13,6 @@ import { clearError } from "./actions";
 
 const styles = theme => ({
   "@global": {
-    "*": {
-      boxSizing: "border-box"
-    },
     html: {
       height: "100%"
     },
@@ -26,6 +23,10 @@ const styles = theme => ({
     },
     "#root": {
       height: "100%"
+    },
+    text: {
+      ...theme.typography.caption,
+      stroke: "currentColor"
     }
   },
   appContainer: {

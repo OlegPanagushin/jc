@@ -12,6 +12,18 @@ import ThumbUp from "@material-ui/icons/ThumbUp";
 import ChatBubbleOutline from "@material-ui/icons/ChatBubbleOutline";
 import Star from "@material-ui/icons/Star";
 import cn from "classnames";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  BarChart,
+  Tooltip,
+  Bar
+} from "recharts";
+import moment from "moment";
 import { getDashboard } from "../actions";
 import Image from "../components/Image";
 import CommentPreview from "../components/CommentPreview";
@@ -35,7 +47,7 @@ const styles = theme => ({
     left: "50%",
     marginLeft: -30,
     marginTop: -30,
-    position: "relative",
+    position: "absolute",
     top: "50%"
   },
   infoTitle: {
@@ -48,6 +60,9 @@ const styles = theme => ({
   infoPartIcon: {
     fontSize: "1.3rem",
     marginRight: 8
+  },
+  firstChart: {
+    marginTop: theme.spacing.unit * 4
   }
 });
 
@@ -61,12 +76,34 @@ class Dashboard extends Component {
     getDashboard: PropTypes.func.isRequired
   };
 
+  dateFormat = v =>
+    moment
+      .unix(v)
+      .local()
+      .format("h:mm");
+
   componentWillMount() {
     this.props.getDashboard();
   }
 
   render() {
     const { wait, classes, post, stat, comments } = this.props;
+
+    const likeData = [];
+    const commentsData = [];
+    stat.forEach(sample => {
+      //const time = moment.unix(sample.timestamp).local();
+
+      likeData.push({
+        likes: sample.likes_growth,
+        when: sample.timestamp
+      });
+      commentsData.push({
+        comments: sample.comments_growth,
+        when: sample.timestamp
+      });
+    });
+
     return wait ? (
       <CircularProgress size={60} className={classes.progress} />
     ) : (
@@ -126,6 +163,42 @@ class Dashboard extends Component {
                 </Grid>
               </Grid>
             </Grid>
+
+            <ResponsiveContainer
+              className={classes.firstChart}
+              width="100%"
+              height={200}
+            >
+              <BarChart data={commentsData}>
+                <CartesianGrid
+                  stroke="#ccc"
+                  strokeDasharray="3 3"
+                  vertical={false}
+                />
+                <XAxis dataKey="when" tickFormatter={this.dateFormat} />
+                <YAxis tickCount={3} />
+                <Tooltip labelFormatter={this.dateFormat} />
+                <Bar dataKey="comments" fill="#3f51b5" />
+              </BarChart>
+            </ResponsiveContainer>
+
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={likeData}>
+                <Line type="monotone" dataKey="likes" stroke="#3f51b5" />
+                <CartesianGrid
+                  stroke="#ccc"
+                  strokeDasharray="3 3"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="when"
+                  tickFormatter={this.dateFormat}
+                  scale="utcTime"
+                />
+                <YAxis tickCount={3} />
+                <Tooltip labelFormatter={this.dateFormat} />
+              </LineChart>
+            </ResponsiveContainer>
           </Paper>
         </Grid>
         <Grid item xs={4} className={classes.layoutSect}>
@@ -167,10 +240,3 @@ export default connect(
     getDashboard: () => dispatch(getDashboard())
   })
 )(withStyles(styles)(Dashboard));
-
-// console.log(
-//   moment
-//     .unix(1527691396)
-//     .local()
-//     .fromNow()
-// );
