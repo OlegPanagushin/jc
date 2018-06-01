@@ -5,6 +5,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import ThumbUp from "@material-ui/icons/ThumbUp";
 import ChatBubbleOutline from "@material-ui/icons/ChatBubbleOutline";
@@ -12,10 +14,11 @@ import Star from "@material-ui/icons/Star";
 import cn from "classnames";
 import { getDashboard } from "../actions";
 import Image from "../components/Image";
+import CommentPreview from "../components/CommentPreview";
 
 const styles = theme => ({
   layoutGrid: {
-    minHeight: "100%"
+    minHeight: `calc(100% + ${theme.spacing.unit * 3}px);`
   },
   layoutSect: {
     minHeight: "100%"
@@ -64,7 +67,6 @@ class Dashboard extends Component {
 
   render() {
     const { wait, classes, post, stat, comments } = this.props;
-    console.log(post, stat, comments);
     return wait ? (
       <CircularProgress size={60} className={classes.progress} />
     ) : (
@@ -128,7 +130,27 @@ class Dashboard extends Component {
         </Grid>
         <Grid item xs={4} className={classes.layoutSect}>
           <Paper className={cn(classes.paper, classes.commentsSect)}>
-            Comments
+            <Typography
+              variant="headline"
+              gutterBottom
+              className={classes.infoTitle}
+            >
+              Comments live
+            </Typography>
+            <Divider />
+            <List>
+              {comments.map(post => (
+                <CommentPreview
+                  key={post.id}
+                  name={post.owner.username}
+                  date={post.created_at}
+                  avatar={post.owner.profile_pic_url}
+                  text={post.text}
+                  profileUrl={post.profile_url}
+                  replyUrl={post.reply}
+                />
+              ))}
+            </List>
           </Paper>
         </Grid>
       </Grid>
@@ -145,3 +167,10 @@ export default connect(
     getDashboard: () => dispatch(getDashboard())
   })
 )(withStyles(styles)(Dashboard));
+
+// console.log(
+//   moment
+//     .unix(1527691396)
+//     .local()
+//     .fromNow()
+// );

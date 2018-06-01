@@ -20,12 +20,12 @@ const styles = theme => ({
   },
   alt: {
     color: theme.palette.grey["300"],
-    height: "60%",
+    height: "100%",
     left: " 50%",
     position: "absolute",
     top: "50%",
     transform: "translate(-50%, -50%)",
-    width: "60%"
+    width: "100%"
   },
   img: {
     bottom: 0,

@@ -8,6 +8,12 @@ import Dialog from "@material-ui/core/Dialog";
 import Typography from "@material-ui/core/Typography";
 
 class ConfirmationDialog extends React.Component {
+  static propTypes = {
+    onClose: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    question: PropTypes.string.isRequired
+  };
+
   state = {
     open: false
   };
@@ -54,11 +60,5 @@ class ConfirmationDialog extends React.Component {
     );
   }
 }
-
-ConfirmationDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  question: PropTypes.string.isRequired
-};
 
 export default ConfirmationDialog;
