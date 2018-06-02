@@ -6,7 +6,8 @@ import {
   GET_PROFILE_REQUEST,
   SET_ERROR,
   CLEAR_ERROR,
-  GET_DASHBOARD_REQUEST
+  GET_DASHBOARD_REQUEST,
+  POLL_DATA_REQUEST
 } from "../constants/service";
 
 export function signupRequest(email, firstName, username) {
@@ -59,5 +60,11 @@ export function setError(error) {
 export function clearError() {
   return {
     type: CLEAR_ERROR
+  };
+}
+
+export function pollData() {
+  return {
+    type: POLL_DATA_REQUEST
   };
 }

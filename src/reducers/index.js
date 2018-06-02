@@ -19,7 +19,10 @@ import {
   GET_PROFILE_FAILURE,
   GET_DASHBOARD_REQUEST,
   GET_DASHBOARD_SUCCESS,
-  GET_DASHBOARD_FAILURE
+  GET_DASHBOARD_FAILURE,
+  UPDATE_POST,
+  UPDATE_COMMENTS,
+  UPDATE_CHARTS
 } from "../constants/service";
 
 const defaultState = {
@@ -36,8 +39,9 @@ const defaultState = {
   error: null,
   user: {},
   post: {},
-  stat: [],
-  comments: []
+  likesChartData: [],
+  commentsChartData: [],
+  commentsData: []
 };
 
 const rootReducer = (
@@ -46,7 +50,16 @@ const rootReducer = (
   },
   action
 ) => {
-  const { type, error, userNameCheckFail, user, post, stat, comments } = action;
+  const {
+    type,
+    error,
+    userNameCheckFail,
+    user,
+    post,
+    likesChartData,
+    commentsChartData,
+    commentsData
+  } = action;
   switch (type) {
     case SIGNUP_REQUEST:
       return {
@@ -176,9 +189,10 @@ const rootReducer = (
     case GET_DASHBOARD_SUCCESS:
       return {
         ...state,
-        stat,
+        likesChartData,
+        commentsChartData,
         post,
-        comments,
+        commentsData,
         gettingDashboard: false
       };
     case GET_DASHBOARD_FAILURE:
@@ -187,6 +201,22 @@ const rootReducer = (
         gettingDashboard: false,
         error
       };
+
+    case UPDATE_POST:
+      //const post = state;
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          ...post
+        }
+      };
+
+    case UPDATE_COMMENTS:
+      return state;
+
+    case UPDATE_CHARTS:
+      return state;
 
     default:
       return state;

@@ -1,3 +1,4 @@
+import Centrifuge from "centrifuge";
 import {
   LOGOUT_REQUEST,
   SAVE_USERNAME_REQUEST,
@@ -6,7 +7,8 @@ import {
   SAVE_USERNAME_SUCCESS,
   GET_PROFILE_SUCCESS,
   GET_DASHBOARD_SUCCESS,
-  GET_DASHBOARD_FAILURE
+  GET_DASHBOARD_FAILURE,
+  POLL_DATA_SUCCESS
 } from "../constants/service";
 import { getToken } from "../services/token";
 
@@ -16,6 +18,7 @@ const ENDPOINT_SIGNUP = "Users/i";
 const ENDPOINT_TOKEN_STATUS = "Socials/instagram/profile_status?time_offset=";
 const ENDPOINT_SAVE_USERNAME = "Socials/instagram/username";
 const ENDPOINT_GET_DASHBOARD = "Socials/instagram/last_tracking_post?group=";
+const ENDPOINT_WEBSOCKET_AUTH = "Websockets/connection_token";
 
 const defaultHeaders = {
   "Content-Type": "application/json"
@@ -147,4 +150,25 @@ export async function getDashboard(group = 0) {
     return getResult(GET_DASHBOARD_FAILURE, {
       error: "Something bad happened"
     });
+}
+
+export async function getWebsocketConnection() {
+  const response = await request(ENDPOINT_WEBSOCKET_AUTH, "GET", authHeaders());
+  if (response.serviseStatus) return response;
+
+  const payload = await response.json();
+  return getResult(POLL_DATA_SUCCESS, payload);
+}
+
+export function createWebSocketConnection(user_id, timestamp, token) {
+  const socket = new Centrifuge({
+    url: "ws://92.53.127.48:8000/connection/websocket",
+    user: user_id,
+    timestamp: timestamp,
+    token: token,
+    authEndpoint: "https://api-test.buzzweb.com/Websockets/auth",
+    authHeaders: authHeaders()
+  });
+  socket.connect();
+  return socket;
 }

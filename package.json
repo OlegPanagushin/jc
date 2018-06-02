@@ -11,6 +11,7 @@
   "dependencies": {
     "@material-ui/core": "^1.0.0",
     "@material-ui/icons": "^1.1.0",
+    "centrifuge": "^1.4.8",
     "classnames": "^2.2.5",
     "moment": "^2.22.1",
     "prop-types": "^15.6.1",

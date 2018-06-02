@@ -72,7 +72,7 @@ class LoginPage extends React.Component {
     this.props.setError("Please fix validation errors");
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.checkToken();
   }
 

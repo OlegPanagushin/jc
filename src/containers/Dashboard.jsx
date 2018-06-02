@@ -24,7 +24,7 @@ import {
   Bar
 } from "recharts";
 import moment from "moment";
-import { getDashboard } from "../actions";
+import { getDashboard, pollData } from "../actions";
 import Image from "../components/Image";
 import CommentPreview from "../components/CommentPreview";
 
@@ -63,17 +63,79 @@ const styles = theme => ({
   },
   firstChart: {
     marginTop: theme.spacing.unit * 4
+  },
+  infoPartFigure: {
+    animationDuration: 800,
+    animationTimingFunction: theme.transitions.easing.easeInOut,
+    transformOrigin: "left center"
+  },
+  grow: {
+    animationName: "grow"
+  },
+  lose: {
+    animationName: "lose"
+  },
+  "@keyframes grow": {
+    from: {
+      color: "initial"
+    },
+    "50%": {
+      color: "green",
+      transform: "scale(1.3)"
+    }
+  },
+  "@keyframes lose": {
+    from: {
+      color: "initial"
+    },
+    "50%": {
+      color: "red",
+      transform: "scale(1.3)"
+    }
   }
 });
+
+function growOrLose(name, props, state) {
+  if (!(name in props.post)) return;
+
+  const propValue = props.post[name];
+  const stateValue = state[name];
+
+  return stateValue === propValue
+    ? null
+    : propValue > stateValue
+      ? props.classes.grow
+      : props.classes.lose;
+}
 
 class Dashboard extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     wait: PropTypes.bool.isRequired,
     post: PropTypes.object.isRequired,
-    stat: PropTypes.array.isRequired,
-    comments: PropTypes.array.isRequired,
-    getDashboard: PropTypes.func.isRequired
+    likesChartData: PropTypes.array.isRequired,
+    commentsChartData: PropTypes.array.isRequired,
+    commentsData: PropTypes.array.isRequired,
+    getDashboard: PropTypes.func.isRequired,
+    pollData: PropTypes.func.isRequired
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    const { post } = props;
+    return {
+      comments: +post.comments || 0,
+      likes: +post.likes || 0,
+      er: +post.er || 0,
+      commentsCls: growOrLose("comments", props, state),
+      likesCls: growOrLose("likes", props, state),
+      erCls: growOrLose("er", props, state)
+    };
+  }
+
+  state = {
+    comments: 0,
+    likes: 0,
+    er: 0
   };
 
   dateFormat = v =>
@@ -82,27 +144,21 @@ class Dashboard extends Component {
       .local()
       .format("h:mm");
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getDashboard();
+    this.props.pollData();
   }
 
   render() {
-    const { wait, classes, post, stat, comments } = this.props;
-
-    const likeData = [];
-    const commentsData = [];
-    stat.forEach(sample => {
-      //const time = moment.unix(sample.timestamp).local();
-
-      likeData.push({
-        likes: sample.likes_growth,
-        when: sample.timestamp
-      });
-      commentsData.push({
-        comments: sample.comments_growth,
-        when: sample.timestamp
-      });
-    });
+    const {
+      wait,
+      classes,
+      likesChartData,
+      commentsChartData,
+      commentsData,
+      post
+    } = this.props;
+    const { comments, likes, er, commentsCls, likesCls, erCls } = this.state;
 
     return wait ? (
       <CircularProgress size={60} className={classes.progress} />
@@ -131,8 +187,12 @@ class Dashboard extends Component {
                     >
                       <ThumbUp className={classes.infoPartIcon} /> Total likes
                     </Typography>
-                    <Typography variant="display1" gutterBottom>
-                      {post.likes || 0}
+                    <Typography
+                      variant="display1"
+                      gutterBottom
+                      className={cn(classes.infoPartFigure, likesCls)}
+                    >
+                      {likes}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
@@ -144,8 +204,12 @@ class Dashboard extends Component {
                       <ChatBubbleOutline className={classes.infoPartIcon} />{" "}
                       Total comments
                     </Typography>
-                    <Typography variant="display1" gutterBottom>
-                      {post.comments || 0}
+                    <Typography
+                      variant="display1"
+                      gutterBottom
+                      className={cn(classes.infoPartFigure, commentsCls)}
+                    >
+                      {comments}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
@@ -156,8 +220,12 @@ class Dashboard extends Component {
                     >
                       <Star className={classes.infoPartIcon} /> Engagement rate
                     </Typography>
-                    <Typography variant="display1" gutterBottom>
-                      {post.er ? Math.ceil(post.er * 100) / 100 : 0}
+                    <Typography
+                      variant="display1"
+                      gutterBottom
+                      className={cn(classes.infoPartFigure, erCls)}
+                    >
+                      {Math.ceil(er * 100) / 100}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -169,7 +237,7 @@ class Dashboard extends Component {
               width="100%"
               height={200}
             >
-              <BarChart data={commentsData}>
+              <BarChart data={commentsChartData}>
                 <CartesianGrid
                   stroke="#ccc"
                   strokeDasharray="3 3"
@@ -183,7 +251,7 @@ class Dashboard extends Component {
             </ResponsiveContainer>
 
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={likeData}>
+              <LineChart data={likesChartData}>
                 <Line type="monotone" dataKey="likes" stroke="#3f51b5" />
                 <CartesianGrid
                   stroke="#ccc"
@@ -212,7 +280,7 @@ class Dashboard extends Component {
             </Typography>
             <Divider />
             <List>
-              {comments.map(post => (
+              {commentsData.map(post => (
                 <CommentPreview
                   key={post.id}
                   name={post.owner.username}
@@ -233,10 +301,23 @@ class Dashboard extends Component {
 
 export default connect(
   state => {
-    const { gettingDashboard, post, stat, comments } = state.rootReducer;
-    return { wait: gettingDashboard === true, post, stat, comments };
+    const {
+      gettingDashboard,
+      post,
+      commentsData,
+      commentsChartData,
+      likesChartData
+    } = state.rootReducer;
+    return {
+      wait: gettingDashboard === true,
+      post,
+      commentsData,
+      commentsChartData,
+      likesChartData
+    };
   },
   dispatch => ({
-    getDashboard: () => dispatch(getDashboard())
+    getDashboard: () => dispatch(getDashboard()),
+    pollData: () => dispatch(pollData())
   })
 )(withStyles(styles)(Dashboard));
