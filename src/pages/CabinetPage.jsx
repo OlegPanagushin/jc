@@ -193,7 +193,7 @@ class CabinetPage extends React.Component {
       classes,
       render,
       title,
-      firstName,
+      first_name,
       instagram_username,
       avatar
     } = this.props;
@@ -241,7 +241,7 @@ class CabinetPage extends React.Component {
               <ListItemIcon>
                 {isAbsoluteUrl(avatar) ? (
                   <Avatar
-                    alt={firstName}
+                    alt={first_name}
                     src={avatar}
                     className={cn(
                       classes.textColor,
@@ -260,7 +260,9 @@ class CabinetPage extends React.Component {
                 )}
               </ListItemIcon>
               <ListItemText
-                primary={<span className={classes.textColor}>{firstName}</span>}
+                primary={
+                  <span className={classes.textColor}>{first_name}</span>
+                }
                 secondary={
                   <span className={classes.textColor}>
                     {instagram_username}
@@ -325,8 +327,8 @@ class CabinetPage extends React.Component {
 
 export default connect(
   state => {
-    const { firstName, instagram_username, avatar } = state.rootReducer.user;
-    return { firstName, instagram_username, avatar };
+    const { first_name, instagram_username, avatar } = state.user;
+    return { first_name, instagram_username, avatar };
   },
   dispatch => ({
     logout: () => dispatch(logout()),

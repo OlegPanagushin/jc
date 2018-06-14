@@ -17,17 +17,13 @@ const postReducer = (
   switch (type) {
     case NEW_POST:
       return {
-        ...state,
-        post: { ...post }
+        ...post
       };
 
     case UPDATE_POST:
       return {
         ...state,
-        post: {
-          ...state.post,
-          ...post
-        }
+        ...post
       };
 
     default:

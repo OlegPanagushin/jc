@@ -1,98 +1,50 @@
 import { combineReducers } from "redux";
 import auth from "./auth";
-import error from "./error";
 import post from "./post";
 import charts from "./charts";
 import comments from "./comments";
+import user from "./user";
 import {
-  GET_PROFILE_REQUEST,
-  GET_PROFILE_SUCCESS,
-  GET_PROFILE_FAILURE,
   GET_DASHBOARD_REQUEST,
   GET_DASHBOARD_SUCCESS,
   GET_DASHBOARD_FAILURE,
-  UPDATE_POST,
-  UPDATE_COMMENTS,
-  UPDATE_CHARTS
+  SET_ERROR,
+  CLEAR_ERROR,
+  WS_ON,
+  WS_OFF
 } from "../constants/service";
 
 const defaultState = {
-  gettingProfile: false,
   gettingDashboard: false,
-  user: {},
-  post: {},
-  likesChartData: [],
-  commentsChartData: [],
-  commentsData: []
+  error: null,
+  live: false
 };
 
-const rootReducer = (
+const root = (
   state = {
     ...defaultState
   },
   action
 ) => {
-  const {
-    type,
-    user,
-    post,
-    likesChartData,
-    commentsChartData,
-    commentsData
-  } = action;
+  const { type, error = null } = action;
   switch (type) {
-    case GET_PROFILE_REQUEST:
-      return {
-        ...state,
-        gettingProfile: true
-      };
-    case GET_PROFILE_SUCCESS:
-      return {
-        ...state,
-        user,
-        gettingProfile: false
-      };
-    case GET_PROFILE_FAILURE:
-      return {
-        ...state,
-        gettingProfile: false
-      };
-
     case GET_DASHBOARD_REQUEST:
-      return {
-        ...state,
-        gettingDashboard: true
-      };
+      return { ...state, gettingDashboard: true };
     case GET_DASHBOARD_SUCCESS:
-      return {
-        ...state,
-        likesChartData,
-        commentsChartData,
-        post,
-        commentsData,
-        gettingDashboard: false
-      };
     case GET_DASHBOARD_FAILURE:
-      return {
-        ...state,
-        gettingDashboard: false
-      };
+      return { ...state, gettingDashboard: false };
 
-    case UPDATE_POST:
-      //const post = state;
-      return {
-        ...state,
-        post: {
-          ...state.post,
-          ...post
-        }
-      };
+    case SET_ERROR:
+      return { ...state, error };
 
-    case UPDATE_COMMENTS:
-      return state;
+    case CLEAR_ERROR:
+      return { ...state, error: null };
 
-    case UPDATE_CHARTS:
-      return state;
+    case WS_ON:
+      return { ...state, live: true };
+
+    case WS_OFF:
+      return { ...state, live: false };
 
     default:
       return state;
@@ -101,9 +53,9 @@ const rootReducer = (
 
 export default combineReducers({
   auth,
-  error,
   post,
   comments,
   charts,
-  rootReducer
+  user,
+  root
 });

@@ -146,7 +146,7 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.getDashboard();
-    //this.props.pollData();
+    this.props.pollData();
   }
 
   render() {
@@ -280,15 +280,15 @@ class Dashboard extends Component {
             </Typography>
             <Divider />
             <List>
-              {commentsData.map(post => (
+              {commentsData.map(comment => (
                 <CommentPreview
-                  key={post.id}
-                  name={post.owner.username}
-                  date={post.created_at}
-                  avatar={post.owner.profile_pic_url}
-                  text={post.text}
-                  profileUrl={post.profile_url}
-                  replyUrl={post.reply}
+                  key={comment.id}
+                  name={comment.owner.username}
+                  date={comment.created_at}
+                  avatar={comment.owner.profile_pic_url}
+                  text={comment.text}
+                  profileUrl={comment.profile_url}
+                  replyUrl={comment.reply}
                 />
               ))}
             </List>
@@ -301,19 +301,12 @@ class Dashboard extends Component {
 
 export default connect(
   state => {
-    const {
-      gettingDashboard,
-      post,
-      commentsData,
-      commentsChartData,
-      likesChartData
-    } = state.rootReducer;
     return {
-      wait: gettingDashboard === true,
-      post,
-      commentsData,
-      commentsChartData,
-      likesChartData
+      wait: state.root.gettingDashboard,
+      post: state.post,
+      commentsData: state.comments,
+      commentsChartData: state.charts.comments,
+      likesChartData: state.charts.likes
     };
   },
   dispatch => ({

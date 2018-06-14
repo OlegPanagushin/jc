@@ -11,7 +11,7 @@ const chartsReducer = (
   },
   action
 ) => {
-  const { type, likes, comments } = action;
+  const { type, likes = [], comments = [] } = action;
 
   switch (type) {
     case NEW_CHARTS_DATA:
@@ -22,8 +22,8 @@ const chartsReducer = (
 
     case UPDATE_CHARTS:
       return {
-        likes: [state.likes, ...likes],
-        comments: [state.comments, ...comments]
+        likes: [...state.likes, ...likes],
+        comments: [...state.comments, ...comments]
       };
 
     default:

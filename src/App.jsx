@@ -115,7 +115,7 @@ App.propTypes = {
 export default connect(
   state => {
     return {
-      error: state.error.error,
+      error: state.root.error,
       isAuthenticated: state.auth.isAuthenticated
     };
   },

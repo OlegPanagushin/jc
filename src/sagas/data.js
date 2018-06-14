@@ -12,7 +12,12 @@ import {
   POLL_DATA_FAILURE,
   UPDATE_POST,
   UPDATE_COMMENTS,
-  UPDATE_CHARTS
+  UPDATE_CHARTS,
+  NEW_POST,
+  NEW_COMMENTS,
+  NEW_CHARTS_DATA,
+  WS_ON
+  //WS_OFF
 } from "../constants/service";
 import * as actions from "../actions";
 import {
@@ -64,12 +69,16 @@ function* getDasboardFlow(action) {
         when: sample.timestamp
       });
     });
+    yield put({ type: GET_DASHBOARD_SUCCESS });
+    yield put({ type: NEW_POST, post: data.post });
     yield put({
-      type: GET_DASHBOARD_SUCCESS,
-      post: data.post,
-      commentsData: data.comments,
-      likesChartData,
-      commentsChartData
+      type: NEW_COMMENTS,
+      comments: data.comments.sort((a, b) => b.created_at - a.created_at)
+    });
+    yield put({
+      type: NEW_CHARTS_DATA,
+      likes: likesChartData,
+      comments: commentsChartData
     });
   } else {
     yield put({ type: GET_DASHBOARD_FAILURE });
@@ -153,6 +162,7 @@ export function* watchChannel(action) {
       token
     );
     const socketChannel = yield call(createSocketChannel, socket, channel);
+    yield put({ type: WS_ON });
     while (true) {
       const payload = yield take(socketChannel);
       const { event, data } = payload.data;
@@ -168,28 +178,25 @@ export function* watchChannel(action) {
           });
           break;
 
-        case UPDATE_COMMENTS:
+        case "update_comments":
+          yield put({
+            type: UPDATE_COMMENTS,
+            comments: [data]
+          });
           break;
-        case UPDATE_CHARTS:
+        case "update_chart":
+          yield put({
+            type: UPDATE_CHARTS,
+            likes: [
+              { likes: data.likes_growth, when: data.datetime.timestamp }
+            ],
+            comments: [
+              { comments: data.comments_growth, when: data.datetime.timestamp }
+            ]
+          });
           break;
         default:
-          break;
       }
-
-      // //ok -> set isAuthorize
-      // const likesChartData = [];
-      // const commentsChartData = [];
-      // data.stat.forEach(sample => {
-      //   likesChartData.push({
-      //     likes: sample.likes_growth,
-      //     when: sample.timestamp
-      //   });
-      //   commentsChartData.push({
-      //     comments: sample.comments_growth,
-      //     when: sample.timestamp
-      //   });
-      // });
-      // yield put({ type: INCOMING_PONG_PAYLOAD, payload });
     }
   }
 }

@@ -36,3 +36,6 @@ export const NEW_CHARTS_DATA = "NEW_CHARTS_DATA";
 export const UPDATE_POST = "UPDATE_POST";
 export const UPDATE_COMMENTS = "UPDATE_COMMENTS";
 export const UPDATE_CHARTS = "UPDATE_CHARTS";
+
+export const WS_ON = "WS_ON";
+export const WS_OFF = "WS_OFF";
