@@ -40,37 +40,34 @@ const styles = theme => ({
   }
 });
 
-class PrivateRoute extends React.Component {
-  render() {
-    const {
-      component: Component,
-      isAuthenticated,
-      title,
-      ...rest
-    } = this.props;
-
-    return (
-      <Route
-        {...rest}
-        render={props =>
-          isAuthenticated ? (
-            <CabinetPage
-              title={title}
-              render={props => <Component {...props} />}
-            />
-          ) : (
-            <Redirect
-              to={{
-                pathname: routes.LOGIN,
-                state: { from: props.location }
-              }}
-            />
-          )
-        }
-      />
-    );
-  }
+function PrivateRoute({
+  component: Component,
+  isAuthenticated,
+  title,
+  ...rest
+}) {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        isAuthenticated ? (
+          <CabinetPage
+            title={title}
+            render={props => <Component {...props} />}
+          />
+        ) : (
+          <Redirect
+            to={{
+              pathname: routes.LOGIN,
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
 }
+
 class App extends React.Component {
   render() {
     const { classes, error, isAuthenticated, clearError } = this.props;
@@ -104,7 +101,6 @@ class App extends React.Component {
             />
             <Redirect to={routes.DASHBOARD} />
           </Switch>
-          {/* <DevTools /> */}
           <Notification message={error} handleClose={clearError} />
         </div>
       </BrowserRouter>

@@ -146,7 +146,7 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.getDashboard();
-    this.props.pollData();
+    //this.props.pollData();
   }
 
   render() {

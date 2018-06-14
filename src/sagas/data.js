@@ -7,7 +7,6 @@ import {
   GET_DASHBOARD_REQUEST,
   GET_DASHBOARD_SUCCESS,
   GET_DASHBOARD_FAILURE,
-  LOGOUT_REQUEST,
   POLL_DATA_REQUEST,
   POLL_DATA_SUCCESS,
   POLL_DATA_FAILURE,
@@ -26,80 +25,60 @@ import {
 function* getProfileFlow() {
   const response = yield call(getProfile);
   const {
-    serviseStatus,
-    error = null,
+    ok,
+    logout,
     first_name,
-    instagram_username
+    instagram_username,
+    error = "Unknown error"
   } = response;
 
-  switch (serviseStatus) {
-    case GET_PROFILE_SUCCESS: //ok -> set isAuthorize
-      yield put({
-        type: GET_PROFILE_SUCCESS,
-        user: {
-          firstName: first_name,
-          instagramUsername: instagram_username
-        }
-      });
-      break;
-    case LOGOUT_REQUEST: //error -> logout(delete token)
-      yield put(actions.logout());
-      yield put({
-        type: GET_DASHBOARD_FAILURE,
-        error: error
-      });
-      break;
-    default:
-      yield put({
-        type: GET_PROFILE_FAILURE,
-        error: error
-      });
-      break;
+  if (ok)
+    yield put({
+      type: GET_PROFILE_SUCCESS,
+      user: {
+        firstName: first_name,
+        instagramUsername: instagram_username
+      }
+    });
+  else {
+    yield put({
+      type: GET_PROFILE_FAILURE,
+      error: error
+    });
+    if (logout) yield put(actions.logout());
   }
 }
 
 function* getDasboardFlow(action) {
   const response = yield call(getDashboard, action.group);
-  const { serviseStatus, error = null, ...data } = response;
+  const { ok, logout, error = "Unknown error", ...data } = response;
 
-  switch (serviseStatus) {
-    case GET_DASHBOARD_SUCCESS:
-      {
-        //ok -> set isAuthorize
-        const likesChartData = [];
-        const commentsChartData = [];
-        data.stat.forEach(sample => {
-          likesChartData.push({
-            likes: sample.likes_growth,
-            when: sample.timestamp
-          });
-          commentsChartData.push({
-            comments: sample.comments_growth,
-            when: sample.timestamp
-          });
-        });
-        yield put({
-          type: GET_DASHBOARD_SUCCESS,
-          post: data.post,
-          commentsData: data.comments,
-          likesChartData,
-          commentsChartData
-        });
-      }
-      break;
-    case LOGOUT_REQUEST: //error -> logout(delete token)
-      yield put(actions.logout());
-      yield put({
-        type: GET_DASHBOARD_FAILURE,
-        error: error
+  if (ok) {
+    const likesChartData = [];
+    const commentsChartData = [];
+    data.stat.forEach(sample => {
+      likesChartData.push({
+        likes: sample.likes_growth,
+        when: sample.timestamp
       });
-      break;
-    default:
-      yield put({
-        type: GET_DASHBOARD_FAILURE,
-        error: error
+      commentsChartData.push({
+        comments: sample.comments_growth,
+        when: sample.timestamp
       });
-      break;
+    });
+    yield put({
+      type: GET_DASHBOARD_SUCCESS,
+      post: data.post,
+      commentsData: data.comments,
+      likesChartData,
+      commentsChartData
+    });
+  } else {
+    yield put({
+      type: GET_DASHBOARD_FAILURE,
+      error: error
+    });
+    if (logout) yield put(actions.logout());
   }
 }
 
@@ -108,45 +87,38 @@ const START_WATCH = "START_WATCH";
 function* pollDataFlow() {
   const response = yield call(getWebsocketConnection);
   const {
-    serviseStatus,
+    ok,
+    logout,
     error = null,
     user_id,
     timestamp,
     token,
     private_channels
   } = response;
-  switch (serviseStatus) {
-    case POLL_DATA_SUCCESS:
-      yield put({
-        type: POLL_DATA_SUCCESS,
-        ws: {
-          user_id,
-          timestamp,
-          token,
-          channel: private_channels.instagram_channel
-        }
-      });
-      yield put({
-        type: START_WATCH,
+
+  if (ok) {
+    yield put({
+      type: POLL_DATA_SUCCESS,
+      ws: {
         user_id,
         timestamp,
         token,
         channel: private_channels.instagram_channel
-      });
-      break;
-    case LOGOUT_REQUEST: //error -> logout(delete token)
-      yield put(actions.logout());
-      yield put({
-        type: POLL_DATA_FAILURE,
-        error: error
-      });
-      break;
-    default:
-      yield put({
-        type: POLL_DATA_FAILURE,
-        error: error
-      });
-      break;
+      }
+    });
+    yield put({
+      type: START_WATCH,
+      user_id,
+      timestamp,
+      token,
+      channel: private_channels.instagram_channel
+    });
+  } else {
+    yield put({
+      type: POLL_DATA_FAILURE,
+      error: error
+    });
+    if (logout) yield put(actions.logout());
   }
 }
 
