@@ -114,10 +114,9 @@ App.propTypes = {
 
 export default connect(
   state => {
-    const { error, isAuthenticated } = state.rootReducer;
     return {
-      error,
-      isAuthenticated
+      error: state.error.error,
+      isAuthenticated: state.auth.isAuthenticated
     };
   },
   dispatch => ({

@@ -26,9 +26,13 @@ export const POLL_DATA_REQUEST = "POLL_DATA_REQUEST";
 export const POLL_DATA_SUCCESS = "POLL_DATA_SUCCESS";
 export const POLL_DATA_FAILURE = "POLL_DATA_FAILURE";
 
+export const SET_ERROR = "SET_ERROR";
+export const CLEAR_ERROR = "CLEAR_ERROR";
+
+export const NEW_POST = "NEW_POST";
+export const NEW_COMMENTS = "NEW_COMMENTS";
+export const NEW_CHARTS_DATA = "NEW_CHARTS_DATA";
+
 export const UPDATE_POST = "UPDATE_POST";
 export const UPDATE_COMMENTS = "UPDATE_COMMENTS";
 export const UPDATE_CHARTS = "UPDATE_CHARTS";
-
-export const SET_ERROR = "SET_ERROR";
-export const CLEAR_ERROR = "CLEAR_ERROR";

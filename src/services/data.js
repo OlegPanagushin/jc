@@ -53,7 +53,7 @@ export async function signup(email, firstName) {
 
 /** */
 export async function checkToken() {
-  const timeOffset = moment().zone();
+  const timeOffset = moment().utcOffset();
   const url = ENDPOINT_TOKEN_STATUS + timeOffset;
   const response = await request(url, "GET", authHeaders());
 

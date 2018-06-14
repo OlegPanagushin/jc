@@ -194,7 +194,7 @@ class CabinetPage extends React.Component {
       render,
       title,
       firstName,
-      instagramUsername,
+      instagram_username,
       avatar
     } = this.props;
 
@@ -262,7 +262,9 @@ class CabinetPage extends React.Component {
               <ListItemText
                 primary={<span className={classes.textColor}>{firstName}</span>}
                 secondary={
-                  <span className={classes.textColor}>{instagramUsername}</span>
+                  <span className={classes.textColor}>
+                    {instagram_username}
+                  </span>
                 }
               />
             </ListItem>
@@ -323,8 +325,8 @@ class CabinetPage extends React.Component {
 
 export default connect(
   state => {
-    const { firstName, instagramUsername, avatar } = state.rootReducer.user;
-    return { firstName, instagramUsername, avatar };
+    const { firstName, instagram_username, avatar } = state.rootReducer.user;
+    return { firstName, instagram_username, avatar };
   },
   dispatch => ({
     logout: () => dispatch(logout()),

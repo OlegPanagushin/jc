@@ -26,39 +26,28 @@ function* chekTokenFlow() {
 
   if (!token) {
     //no token -> no user
-    yield put({
-      type: CHECK_TOKEN_FAILURE,
-      error: null
-    });
+    yield put({ type: CHECK_TOKEN_FAILURE });
     return;
   }
 
   if (token) {
     const response = yield call(checkToken, token);
-    const { ok, status, error } = response;
+    const { ok, logout, status, error } = response;
 
     //not_exists - не подключен пользователь instagram
     //exists - всё окей
-    if (ok) {
-      if (status === USERNAME_EXISTS) yield put({ type: CHECK_TOKEN_SUCCESS });
-      else if (status === USERNAME_NOT_EXISTS)
-        yield put({
-          type: CHECK_TOKEN_FAILURE,
-          userNameCheckFail: true,
-          error: "Please specify username"
-        });
-    } else if (error)
-      yield put({
-        type: CHECK_TOKEN_FAILURE,
-        userNameCheckFail: true,
-        error
-      });
+    if (ok && status === USERNAME_EXISTS)
+      yield put({ type: CHECK_TOKEN_SUCCESS });
     else {
-      yield put({
-        type: CHECK_TOKEN_FAILURE,
-        error: error
-      });
-      yield put(actions.logout());
+      let errorMsg = error;
+      const action = { type: CHECK_TOKEN_FAILURE };
+      if (status === USERNAME_NOT_EXISTS) {
+        errorMsg = "Please specify username";
+        action.userNameCheckFail = true;
+      }
+      yield put(action);
+      yield put(actions.setError(errorMsg));
+      if (logout) yield put(actions.logout());
     }
   }
 }
@@ -75,55 +64,41 @@ function* signupFlow(action) {
     });
     yield call(setToken, token);
     yield put(actions.saveUsername(username));
-  } else
-    yield put({
-      type: SIGNUP_FAILURE,
-      error
-    });
+  } else {
+    yield put({ type: SIGNUP_FAILURE });
+    yield put(actions.setError(error));
+  }
 }
 
 function* saveUsernameFlow(action) {
   const { username } = action;
   const response = yield call(saveUsername, username);
-  const { ok, logout, error, status } = response;
+  const { ok, logout, status, error = "Try another user name" } = response;
 
   //private - недоступный пользователь
   //not_available - нет такого аккаунта в инсте
   //exists - подключено
-  if (ok) {
+  if (ok && status === USERNAME_EXISTS)
+    yield put({
+      type: SAVE_USERNAME_SUCCESS
+    });
+  else {
+    let errorMsg = error;
+
     switch (status) {
-      case USERNAME_EXISTS:
-        yield put({
-          type: SAVE_USERNAME_SUCCESS
-        });
-        break;
       case USERNAME_PRIVATE:
-        yield put({
-          type: SAVE_USERNAME_FAILURE,
-          error: `"${username} is private, try another"`
-        });
+        errorMsg = `"${username} is private, try another"`;
         break;
       case USERNAME_NOT_AVAILABLE:
+        errorMsg = `"${username} is not available, try another"`;
         break;
-
       default:
-        yield put({
-          type: SAVE_USERNAME_FAILURE,
-          error: "Unknown error, try another username"
-        });
-        break;
     }
-  } else if (logout) {
-    yield put({
-      type: SAVE_USERNAME_FAILURE,
-      error
-    });
-    yield put(actions.logout());
-  } else
-    yield put({
-      type: SAVE_USERNAME_FAILURE,
-      error: error
-    });
+
+    yield put({ type: SAVE_USERNAME_FAILURE });
+    yield put(actions.setError(errorMsg));
+    if (logout) yield put(actions.logout());
+  }
 }
 
 function* logoutFlow() {

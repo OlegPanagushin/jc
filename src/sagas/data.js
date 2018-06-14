@@ -36,15 +36,13 @@ function* getProfileFlow() {
     yield put({
       type: GET_PROFILE_SUCCESS,
       user: {
-        firstName: first_name,
-        instagramUsername: instagram_username
+        first_name,
+        instagram_username
       }
     });
   else {
-    yield put({
-      type: GET_PROFILE_FAILURE,
-      error: error
-    });
+    yield put({ type: GET_PROFILE_FAILURE });
+    yield put(actions.setError(error));
     if (logout) yield put(actions.logout());
   }
 }
@@ -74,10 +72,8 @@ function* getDasboardFlow(action) {
       commentsChartData
     });
   } else {
-    yield put({
-      type: GET_DASHBOARD_FAILURE,
-      error: error
-    });
+    yield put({ type: GET_DASHBOARD_FAILURE });
+    yield put(actions.setError(error));
     if (logout) yield put(actions.logout());
   }
 }
@@ -89,7 +85,7 @@ function* pollDataFlow() {
   const {
     ok,
     logout,
-    error = null,
+    error = "Unknown error",
     user_id,
     timestamp,
     token,
@@ -114,10 +110,9 @@ function* pollDataFlow() {
       channel: private_channels.instagram_channel
     });
   } else {
-    yield put({
-      type: POLL_DATA_FAILURE,
-      error: error
-    });
+    yield put({ type: POLL_DATA_FAILURE });
+    yield put(actions.setError(error));
+
     if (logout) yield put(actions.logout());
   }
 }

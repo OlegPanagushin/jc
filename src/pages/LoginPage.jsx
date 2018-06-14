@@ -140,7 +140,7 @@ export default connect(
       savingUserName,
       gettingToken,
       userNameCheckFail
-    } = state.rootReducer;
+    } = state.auth;
     return {
       wait: checkingToken || savingUserName || gettingToken,
       specifyUserName: userNameCheckFail === true
