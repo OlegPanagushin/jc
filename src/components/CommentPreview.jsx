@@ -22,12 +22,15 @@ const styles = theme => ({
     width: "100%"
   },
   commentText: {
-    display: "block"
+    display: "block",
+    wordWrap: "break-word"
   },
   replayButton: {
     marginLeft: -theme.spacing.unit - theme.spacing.unit / 2
   }
 });
+
+const tagRegex = /\B(#[A-Z0-9\-._]+\b)(?!;)/gi;
 
 class CommentPreview extends React.Component {
   static propTypes = {
@@ -39,6 +42,25 @@ class CommentPreview extends React.Component {
     profileUrl: PropTypes.string.isRequired,
     replyUrl: PropTypes.string.isRequired
   };
+
+  getUrl(tag) {
+    return `https://www.instagram.com/explore/tags/${tag.replace("#", "")}`;
+  }
+
+  renderTextWithTags(text) {
+    const segs = text.split(" ");
+    let tagsCount = 0;
+    return segs.map(seg => [
+      seg.match(tagRegex) ? (
+        <a key={tagsCount++} href={this.getUrl(seg)} target="_blank">
+          {seg}
+        </a>
+      ) : (
+        seg
+      ),
+      " "
+    ]);
+  }
 
   render() {
     const {
@@ -76,7 +98,7 @@ class CommentPreview extends React.Component {
           className={classes.commentTextBlock}
           primary={[
             <span key="1" className={classes.commentText}>
-              {text}
+              {text.includes("#") ? this.renderTextWithTags(text) : text}
             </span>,
             <Button
               key="2"

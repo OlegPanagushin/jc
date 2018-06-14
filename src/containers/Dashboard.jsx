@@ -137,6 +137,8 @@ class Dashboard extends Component {
     likes: 0,
     er: 0
   };
+  postContainerRef = React.createRef();
+  commentsContainerRef = React.createRef();
 
   dateFormat = v =>
     moment
@@ -144,9 +146,19 @@ class Dashboard extends Component {
       .local()
       .format("h:mm");
 
+  adjustHeight = () => {
+    const post = this.postContainerRef.current;
+    const comments = this.commentsContainerRef.current;
+
+    comments.style.height = post.clientHeight + "px";
+    comments.style.width = "110px";
+  };
+
   componentDidMount() {
     this.props.getDashboard();
     this.props.pollData();
+    window.addEventListener("resize", () => this.adjustHeight());
+    this.adjustHeight();
   }
 
   render() {
@@ -164,7 +176,16 @@ class Dashboard extends Component {
       <CircularProgress size={60} className={classes.progress} />
     ) : (
       <Grid container spacing={24} className={classes.layoutGrid}>
-        <Grid item xs={8} className={classes.layoutSect}>
+        <Grid
+          item
+          xs={8}
+          className={classes.layoutSect}
+          component={({ children, ...props }) => (
+            <div ref={this.postContainerRef} {...props}>
+              {children}
+            </div>
+          )}
+        >
           <Paper className={classes.paper}>
             <Grid container spacing={16}>
               <Grid item xs={4}>
@@ -269,7 +290,16 @@ class Dashboard extends Component {
             </ResponsiveContainer>
           </Paper>
         </Grid>
-        <Grid item xs={4} className={classes.layoutSect}>
+        <Grid
+          item
+          xs={4}
+          className={classes.layoutSect}
+          component={({ children, ...props }) => (
+            <div ref={this.commentsContainerRef} {...props}>
+              {children}
+            </div>
+          )}
+        >
           <Paper className={cn(classes.paper, classes.commentsSect)}>
             <Typography
               variant="headline"
@@ -283,9 +313,9 @@ class Dashboard extends Component {
               {commentsData.map(comment => (
                 <CommentPreview
                   key={comment.id}
-                  name={comment.owner.username}
+                  name={comment.owner && comment.owner.username}
                   date={comment.created_at}
-                  avatar={comment.owner.profile_pic_url}
+                  avatar={comment.owner && comment.owner.profile_pic_url}
                   text={comment.text}
                   profileUrl={comment.profile_url}
                   replyUrl={comment.reply}
