@@ -98,7 +98,9 @@ class CommentPreview extends React.Component {
           className={classes.commentTextBlock}
           primary={[
             <span key="1" className={classes.commentText}>
-              {text.includes("#") ? this.renderTextWithTags(text) : text}
+              {text && text.includes("#")
+                ? this.renderTextWithTags(text)
+                : text}
             </span>,
             <Button
               key="2"

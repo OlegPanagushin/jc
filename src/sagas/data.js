@@ -179,10 +179,11 @@ export function* watchChannel(action) {
           break;
 
         case "update_comments":
-          yield put({
-            type: UPDATE_COMMENTS,
-            comments: [data]
-          });
+          if (data.length)
+            yield put({
+              type: UPDATE_COMMENTS,
+              comments: data.sort((a, b) => b.created_at - a.created_at)
+            });
           break;
         case "update_chart":
           yield put({
