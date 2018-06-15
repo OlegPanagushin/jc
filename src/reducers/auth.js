@@ -15,10 +15,7 @@ import {
 
 const defaultState = {
   gettingToken: false,
-  gotToken: false,
   checkingToken: false,
-  tokenChecked: false,
-  tokenCheckFail: false,
   savingUserName: false,
   userNameCheckFail: false,
   isAuthenticated: false
@@ -35,35 +32,28 @@ const authReducer = (
     case SIGNUP_REQUEST:
       return {
         ...state,
-        gettingToken: true,
-        gotToken: false
+        gettingToken: true
       };
     case SIGNUP_SUCCESS:
       return {
         ...state,
-        gettingToken: false,
-        gotToken: true
+        gettingToken: false
       };
     case SIGNUP_FAILURE:
       return {
         ...state,
-        gettingToken: false,
-        gotToken: false
+        gettingToken: false
       };
 
     case CHECK_TOKEN_REQUEST:
       return {
         ...state,
-        checkingToken: true,
-        tokenChecked: false,
-        tokenCheckFail: false
+        checkingToken: true
       };
     case CHECK_TOKEN_SUCCESS:
       return {
         ...state,
         checkingToken: false,
-        tokenChecked: true,
-        tokenCheckFail: false,
         isAuthenticated: true
       };
 
@@ -71,9 +61,7 @@ const authReducer = (
       return {
         ...state,
         checkingToken: false,
-        userNameCheckFail: userNameCheckFail === true,
-        tokenChecked: true,
-        tokenCheckFail: true
+        userNameCheckFail: userNameCheckFail === true
       };
 
     case SAVE_USERNAME_REQUEST:
