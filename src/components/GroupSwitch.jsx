@@ -42,6 +42,7 @@ class GroupSwitch extends React.Component {
       ...this.state,
       group: group
     });
+    this.props.switchGroup(group);
     this.props.getDashboard(group, true);
     if (group === "0") this.props.pollData();
   };

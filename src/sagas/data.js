@@ -16,7 +16,9 @@ import {
   NEW_POST,
   NEW_COMMENTS,
   NEW_CHARTS_DATA,
-  WS_ON
+  WS_ON,
+  SWITCH_GROUP,
+  WS_OFF
   //WS_OFF
 } from "../constants/service";
 import * as actions from "../actions";
@@ -164,6 +166,13 @@ export function* watchChannel(action) {
     const socketChannel = yield call(createSocketChannel, socket, channel);
     yield put({ type: WS_ON });
     while (true) {
+      const switchResponce = yield take(SWITCH_GROUP);
+      if (switchResponce.group === "24") {
+        socketChannel.close();
+        yield put({ type: WS_OFF });
+        return;
+      }
+
       const payload = yield take(socketChannel);
       const { event, data } = payload.data;
       switch (event) {

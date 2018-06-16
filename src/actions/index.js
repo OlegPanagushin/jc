@@ -72,8 +72,9 @@ export function pollData() {
   };
 }
 
-export function switchGroup() {
+export function switchGroup(group) {
   return {
-    type: SWITCH_GROUP
+    type: SWITCH_GROUP,
+    group
   };
 }
