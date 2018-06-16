@@ -15,7 +15,8 @@ import {
 } from "../constants/service";
 
 const defaultState = {
-  gettingDashboard: false,
+  fetchingDashboard: false,
+  updateDashboard: false,
   error: null,
   live: false
 };
@@ -26,13 +27,17 @@ const root = (
   },
   action
 ) => {
-  const { type, error = null } = action;
+  const { type, update, error = null } = action;
   switch (type) {
     case GET_DASHBOARD_REQUEST:
-      return { ...state, gettingDashboard: true };
+      return {
+        ...state,
+        fetchingDashboard: update === true ? false : true,
+        updateDashboard: true
+      };
     case GET_DASHBOARD_SUCCESS:
     case GET_DASHBOARD_FAILURE:
-      return { ...state, gettingDashboard: false };
+      return { ...state, fetchingDashboard: false, updateDashboard: false };
 
     case SET_ERROR:
       return { ...state, error };

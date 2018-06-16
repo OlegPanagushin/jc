@@ -15,6 +15,7 @@ const styles = theme => ({
     left: "50%",
     marginLeft: -20,
     marginTop: -20,
+    padding: theme.spacing.unit,
     position: "absolute",
     top: "50%"
   },
@@ -51,18 +52,10 @@ class Image extends React.Component {
     loading: true
   };
 
-  static getDerivedStateFromProps(props, state) {
-    const { src } = props;
-    return {
-      ...state,
-      loading: false,
-      error: !src
-    };
-  }
-
   onLoadHandler = () => {
     this.setState({
-      loading: false
+      ...this.state,
+      loading: true
     });
   };
 
@@ -80,9 +73,10 @@ class Image extends React.Component {
     return (
       <div className={classes.imageWrapper}>
         <div className={classes.heightPusher}>
-          {loading ? (
+          {loading && (
             <CircularProgress size={40} className={classes.progress} />
-          ) : error ? (
+          )}
+          {error ? (
             <Portrait className={classes.alt} />
           ) : (
             <img

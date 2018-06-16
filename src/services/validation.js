@@ -1,6 +1,6 @@
-const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const USERNAME_REGEX = /^[a-zA-Z0-9_]+([.]?[a-zA-Z0-9_])*$/;
-const FIRSTNAME_REGEX = /^[a-zA-Z0-9]+([ ]?[a-zA-Z0-9])*$/;
+export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+export const USERNAME_REGEX = /^[a-zA-Z0-9_]+([.]?[a-zA-Z0-9_])*$/;
+export const FIRSTNAME_REGEX = /^[a-zA-Z0-9]+([ ]?[a-zA-Z0-9])*$/;
 
 export function validateEmail(value) {
   if (!value) return "Email is required field";

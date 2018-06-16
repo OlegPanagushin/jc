@@ -19,13 +19,11 @@ const dateFormat = v =>
     .local()
     .format("h:mm");
 
-export const LikesChart = connect(state => {
-  return {
-    data: state.charts.likes
-  };
-})(({ data }) => {
+export const LikesChart = connect(state => ({
+  data: state.charts.likes
+}))(({ data }) => {
   return (
-    <ResponsiveContainer width="100%" height={200}>
+    <ResponsiveContainer width="100%" height={150}>
       <LineChart data={data}>
         <Line type="monotone" dataKey="likes" stroke="#3f51b5" />
         <CartesianGrid stroke="#ccc" strokeDasharray="3 3" vertical={false} />
@@ -37,13 +35,11 @@ export const LikesChart = connect(state => {
   );
 });
 
-export const CommentsChart = connect(state => {
-  return {
-    data: state.charts.comments
-  };
-})(({ data }) => {
+export const CommentsChart = connect(state => ({
+  data: state.charts.comments
+}))(({ data }) => {
   return (
-    <ResponsiveContainer width="100%" height={200}>
+    <ResponsiveContainer width="100%" height={150}>
       <BarChart data={data}>
         <CartesianGrid stroke="#ccc" strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="when" tickFormatter={dateFormat} />

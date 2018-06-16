@@ -44,9 +44,11 @@ export function getUserProfile() {
   };
 }
 
-export function getDashboard() {
+export function getDashboard(group, update) {
   return {
-    type: GET_DASHBOARD_REQUEST
+    type: GET_DASHBOARD_REQUEST,
+    group,
+    update
   };
 }
 

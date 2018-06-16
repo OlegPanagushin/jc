@@ -27,9 +27,11 @@ const request = (endpoint, method, headers, data, noCache) =>
   fetch(`${API_ROOT}${endpoint}`, {
     method,
     headers,
-    cache: noCache ? "no-cache" : null,
+    cache: noCache ? "no-cache" : "default",
     body: data ? JSON.stringify(data) : null
-  }).catch(() => errorResult("Something bad happened (network error)"));
+  }).catch(ex =>
+    errorResult(ex.message || "Something bad happened (network error)")
+  );
 
 /** */
 export async function signup(email, firstName) {
@@ -57,6 +59,7 @@ export async function checkToken() {
   const url = ENDPOINT_TOKEN_STATUS + timeOffset;
   const response = await request(url, "GET", authHeaders());
 
+  if (response.hasOwnProperty("error")) return response;
   if (response.status === 401) return logoutResult();
 
   const payload = await response.json();
@@ -72,6 +75,7 @@ export async function saveUsername(username) {
     username
   });
 
+  if (response.hasOwnProperty("error")) return response;
   if (response.status === 401) return logoutResult();
   if (response.status === 404) return errorResult("The username not found");
   if (response.status === 409) return errorResult("The username is busy");
@@ -87,6 +91,7 @@ export async function saveUsername(username) {
 export async function getProfile() {
   const response = await request(ENDPOINT_USER, "GET", authHeaders());
 
+  if (response.hasOwnProperty("error")) return response;
   if (response.status === 401) return logoutResult();
 
   const payload = await response.json();
@@ -94,10 +99,11 @@ export async function getProfile() {
 }
 
 /** */
-export async function getDashboard(group = 0) {
+export async function getDashboard(group = 24) {
   const url = ENDPOINT_GET_DASHBOARD + group;
   const response = await request(url, "GET", authHeaders());
 
+  if (response.hasOwnProperty("error")) return response;
   if (response.status === 401) return logoutResult();
   if (response.status === 404) return errorResult("There is no data");
 
@@ -111,6 +117,7 @@ export async function getDashboard(group = 0) {
 export async function getWebsocketConnection() {
   const response = await request(ENDPOINT_WEBSOCKET_AUTH, "GET", authHeaders());
 
+  if (response.hasOwnProperty("error")) return response;
   if (response.status === 401) return logoutResult();
 
   const payload = await response.json();
