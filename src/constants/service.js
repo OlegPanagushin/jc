@@ -39,3 +39,5 @@ export const UPDATE_CHARTS = "UPDATE_CHARTS";
 
 export const WS_ON = "WS_ON";
 export const WS_OFF = "WS_OFF";
+
+export const SWITCH_GROUP = "SWITCH_GROUP";

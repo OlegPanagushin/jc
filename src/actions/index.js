@@ -7,7 +7,8 @@ import {
   SET_ERROR,
   CLEAR_ERROR,
   GET_DASHBOARD_REQUEST,
-  POLL_DATA_REQUEST
+  POLL_DATA_REQUEST,
+  SWITCH_GROUP
 } from "../constants/service";
 
 export function signupRequest(email, firstName, username) {
@@ -44,7 +45,7 @@ export function getUserProfile() {
   };
 }
 
-export function getDashboard(group, update) {
+export function getDashboard(group = 24, update = false) {
   return {
     type: GET_DASHBOARD_REQUEST,
     group,
@@ -68,5 +69,11 @@ export function clearError() {
 export function pollData() {
   return {
     type: POLL_DATA_REQUEST
+  };
+}
+
+export function switchGroup() {
+  return {
+    type: SWITCH_GROUP
   };
 }

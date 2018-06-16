@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Portrait from "@material-ui/icons/Portrait";
+import cn from "classnames";
 
 const styles = theme => ({
   imageWrapper: {},
@@ -34,9 +35,14 @@ const styles = theme => ({
     margin: "auto",
     maxHeight: "100%",
     maxWidth: "100%",
+    opacity: 1,
     position: "absolute",
     right: 0,
-    top: 0
+    top: 0,
+    translate: theme.transitions.create("opacity")
+  },
+  loading: {
+    opacity: 0
   }
 });
 
@@ -55,7 +61,7 @@ class Image extends React.Component {
   onLoadHandler = () => {
     this.setState({
       ...this.state,
-      loading: true
+      loading: false
     });
   };
 
@@ -84,7 +90,7 @@ class Image extends React.Component {
               alt={alt || "Post image"}
               onLoad={this.onLoadHandler}
               onError={this.onErrorHandler}
-              className={classes.img}
+              className={cn(classes.img, loading && classes.loading)}
             />
           )}
         </div>

@@ -94,7 +94,6 @@ class CommentPreview extends React.Component {
     return [
       <ListItem key="1" className={classes.comment}>
         <ListItemIcon>
-          {/* <Avatar alt={name} src={avatar} /> */}
           <div className={classes.avatar}>
             <Image src={avatar} alt={name} />
           </div>

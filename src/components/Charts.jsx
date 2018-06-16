@@ -17,7 +17,7 @@ const dateFormat = v =>
   moment
     .unix(v)
     .local()
-    .format("h:mm");
+    .format("H:mm");
 
 export const LikesChart = connect(state => ({
   data: state.charts.likes
