@@ -1,7 +1,7 @@
 {
   "root": "build/",
   "routes": {
-    "/OlegPanagushin/js/**": "/",
+    "/static/**": "/static/",
     "/**": "index.html"
   }
 }

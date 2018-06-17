@@ -1,7 +1,6 @@
 {
   "name": "jc",
   "version": "0.1.0",
-  "homepage": "https://github.com/OlegPanagushin/jc",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
