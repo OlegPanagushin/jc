@@ -4,6 +4,7 @@ import post from "./post";
 import charts from "./charts";
 import comments from "./comments";
 import user from "./user";
+import posts from "./posts";
 import {
   GET_DASHBOARD_REQUEST,
   GET_DASHBOARD_SUCCESS,
@@ -62,5 +63,6 @@ export default combineReducers({
   comments,
   charts,
   user,
+  posts,
   root
 });

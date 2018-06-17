@@ -9,6 +9,7 @@ const ENDPOINT_TOKEN_STATUS = "Socials/instagram/profile_status?time_offset=";
 const ENDPOINT_SAVE_USERNAME = "Socials/instagram/username";
 const ENDPOINT_GET_DASHBOARD = "Socials/instagram/last_tracking_post?group=";
 const ENDPOINT_WEBSOCKET_AUTH = "Websockets/connection_token";
+const ENDPOINT_POSTS = "Socials/instagram/last_posts?sort=";
 const STATUS_OK = "OK";
 
 const defaultHeaders = {
@@ -139,4 +140,19 @@ export function createWebSocketConnection(user_id, timestamp, token) {
   });
   socket.connect();
   return socket;
+}
+
+/** */
+export async function getPosts(sort = "date") {
+  const url = ENDPOINT_POSTS + sort;
+  const response = await request(url, "GET", authHeaders());
+
+  if (response.hasOwnProperty("error")) return response;
+  if (response.status === 401) return logoutResult();
+  if (response.status === 404) return errorResult("There is no data");
+
+  const payload = await response.json();
+
+  if (payload.data) return okResult({ posts: payload.data });
+  return errorResult("Something bad happened");
 }

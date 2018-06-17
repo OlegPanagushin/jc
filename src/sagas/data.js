@@ -18,16 +18,22 @@ import {
   NEW_CHARTS_DATA,
   WS_ON,
   SWITCH_GROUP,
-  WS_OFF
+  WS_OFF,
+  GET_POSTS_REQUEST,
+  GET_POSTS_SUCCESS,
+  GET_POSTS_FAILURE
   //WS_OFF
 } from "../constants/service";
 import * as actions from "../actions";
 import {
   getProfile,
   getDashboard,
+  getPosts,
   getWebsocketConnection,
   createWebSocketConnection
 } from "../services/data";
+
+const START_WATCH = "START_WATCH";
 
 function* getProfileFlow() {
   const response = yield call(getProfile);
@@ -89,8 +95,6 @@ function* getDasboardFlow(action) {
   }
 }
 
-const START_WATCH = "START_WATCH";
-
 function* pollDataFlow() {
   const response = yield call(getWebsocketConnection);
   const {
@@ -128,23 +132,33 @@ function* pollDataFlow() {
   }
 }
 
+function* getPostsFlow() {
+  const response = yield call(getPosts);
+  const { ok, error = "Unknown error", logout, posts } = response;
+
+  if (ok)
+    yield put({
+      type: GET_POSTS_SUCCESS,
+      posts
+    });
+  else {
+    yield put({ type: GET_POSTS_FAILURE });
+    yield put(actions.setError(error));
+    if (logout) yield put(actions.logout());
+  }
+}
+
 function* authWatcher() {
   yield takeLatest(GET_PROFILE_REQUEST, getProfileFlow);
   yield takeLatest(GET_DASHBOARD_REQUEST, getDasboardFlow);
+  yield takeLatest(GET_POSTS_REQUEST, getPostsFlow);
   yield takeLatest(POLL_DATA_REQUEST, pollDataFlow);
   yield takeLatest(START_WATCH, watchChannel);
 }
 
 function createSocketChannel(socket, channel) {
   return eventChannel(emit => {
-    const sub = socket
-      .subscribe(channel, emit)
-      .on("subscribe", () => {
-        //console.log("log from subscribe");
-      })
-      .on("unsubscribe", () => {
-        //
-      });
+    const sub = socket.subscribe(channel, emit);
 
     return () => {
       sub.unsubscribe();

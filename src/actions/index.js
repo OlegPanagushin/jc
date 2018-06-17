@@ -8,7 +8,8 @@ import {
   CLEAR_ERROR,
   GET_DASHBOARD_REQUEST,
   POLL_DATA_REQUEST,
-  SWITCH_GROUP
+  SWITCH_GROUP,
+  GET_POSTS_REQUEST
 } from "../constants/service";
 
 export function signupRequest(email, firstName, username) {
@@ -76,5 +77,11 @@ export function clearError() {
 export function pollData() {
   return {
     type: POLL_DATA_REQUEST
+  };
+}
+
+export function getPosts() {
+  return {
+    type: GET_POSTS_REQUEST
   };
 }

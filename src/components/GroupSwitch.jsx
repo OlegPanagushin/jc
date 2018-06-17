@@ -5,7 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import teal from "@material-ui/core/colors/teal";
 import blue from "@material-ui/core/colors/blue";
-import { switchGroup, pollData } from "../actions";
+import { switchGroup, pollData, getDashboard } from "../actions";
 
 const styles = theme => ({
   switch: {
@@ -74,5 +74,5 @@ export default connect(
   state => ({
     disable: state.root.fetchingDashboard || state.root.updateDashboard
   }),
-  { switchGroup, pollData }
+  { switchGroup, pollData, getDashboard }
 )(withStyles(styles)(GroupSwitch));

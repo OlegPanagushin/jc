@@ -91,9 +91,15 @@ class App extends React.Component {
             />
             <Route
               path={routes.LOGIN}
-              render={() =>
+              render={({ location }) =>
                 isAuthenticated ? (
-                  <Redirect to={routes.DASHBOARD} />
+                  <Redirect
+                    to={
+                      location.state && location.state.from
+                        ? location.state.from
+                        : routes.DASHBOARD
+                    }
+                  />
                 ) : (
                   <LoginPage />
                 )
