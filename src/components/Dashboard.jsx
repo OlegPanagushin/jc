@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -11,6 +12,7 @@ import CommentsBlock from "../components/CommentsBlock";
 import { LikesChart, CommentsChart } from "../components/Charts";
 import SwitchGroup from "../components/GroupSwitch";
 import CommentsTitle from "../components/CommentsTitle";
+import { switchGroup } from "../actions";
 
 const styles = theme => ({
   layoutGrid: {
@@ -41,7 +43,8 @@ const styles = theme => ({
 
 class Dashboard extends React.Component {
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    switchGroup: PropTypes.func.isRequired
   };
 
   state = {
@@ -57,6 +60,10 @@ class Dashboard extends React.Component {
   componentDidMount() {
     this.adjustHeight();
     window.addEventListener("resize", this.adjustHeight);
+  }
+
+  componentWillUnmount() {
+    this.props.switchGroup("24");
   }
 
   render() {
@@ -104,4 +111,7 @@ class Dashboard extends React.Component {
   }
 }
 
-export default withStyles(styles)(Dashboard);
+export default connect(
+  null,
+  { switchGroup }
+)(withStyles(styles)(Dashboard));

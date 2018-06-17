@@ -53,6 +53,13 @@ export function getDashboard(group = 24, update = false) {
   };
 }
 
+export function switchGroup(group) {
+  return {
+    type: SWITCH_GROUP,
+    group
+  };
+}
+
 export function setError(error) {
   return {
     type: SET_ERROR,
@@ -69,12 +76,5 @@ export function clearError() {
 export function pollData() {
   return {
     type: POLL_DATA_REQUEST
-  };
-}
-
-export function switchGroup(group) {
-  return {
-    type: SWITCH_GROUP,
-    group
   };
 }
