@@ -18,7 +18,8 @@ const defaultState = {
   checkingToken: false,
   savingUserName: false,
   userNameCheckFail: false,
-  isAuthenticated: false
+  isAuthenticated: false,
+  username: null
 };
 
 const authReducer = (
@@ -27,7 +28,7 @@ const authReducer = (
   },
   action
 ) => {
-  const { type, userNameCheckFail } = action;
+  const { type, userNameCheckFail, username } = action;
   switch (type) {
     case SIGNUP_REQUEST:
       return {
@@ -69,7 +70,8 @@ const authReducer = (
         ...state,
         savingUserName: true,
         userNameCheckFail: false,
-        isAuthenticated: false
+        isAuthenticated: false,
+        username: username
       };
     case SAVE_USERNAME_SUCCESS:
       return {

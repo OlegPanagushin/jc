@@ -55,8 +55,13 @@ class LoginPage extends React.Component {
   };
 
   saveClick = () => {
-    const { specifyUserName } = this.props;
+    const { specifyUserName, prevUsername } = this.props;
     const { email, firstName, username } = this.state;
+
+    if (prevUsername === username.value) {
+      this.props.setError("Please specify another username");
+      return;
+    }
 
     if (specifyUserName) {
       if (!username.error) {
@@ -139,10 +144,12 @@ export default connect(
       checkingToken,
       savingUserName,
       gettingToken,
-      userNameCheckFail
+      userNameCheckFail,
+      username
     } = state.auth;
     return {
       wait: checkingToken || savingUserName || gettingToken,
+      prevUsername: username,
       specifyUserName: userNameCheckFail === true
     };
   },

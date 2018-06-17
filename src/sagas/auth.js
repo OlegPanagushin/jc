@@ -95,7 +95,7 @@ function* saveUsernameFlow(action) {
       default:
     }
 
-    yield put({ type: SAVE_USERNAME_FAILURE });
+    yield put({ type: SAVE_USERNAME_FAILURE, username });
     yield put(actions.setError(errorMsg));
     if (logout) yield put(actions.logout());
   }

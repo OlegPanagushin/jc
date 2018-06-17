@@ -12,7 +12,7 @@ import CommentsBlock from "../components/CommentsBlock";
 import { LikesChart, CommentsChart } from "../components/Charts";
 import SwitchGroup from "../components/GroupSwitch";
 import CommentsTitle from "../components/CommentsTitle";
-import { switchGroup } from "../actions";
+import { switchGroup, getDashboard } from "../actions";
 
 const styles = theme => ({
   layoutGrid: {
@@ -58,6 +58,7 @@ class Dashboard extends React.Component {
   };
 
   componentDidMount() {
+    this.props.getDashboard();
     this.adjustHeight();
     window.addEventListener("resize", this.adjustHeight);
   }
@@ -113,5 +114,5 @@ class Dashboard extends React.Component {
 
 export default connect(
   null,
-  { switchGroup }
+  { switchGroup, getDashboard }
 )(withStyles(styles)(Dashboard));
