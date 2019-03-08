@@ -2,7 +2,7 @@ import moment from "moment";
 import Centrifuge from "centrifuge";
 import { getToken } from "../services/token";
 
-const API_ROOT = "https://api-test.buzzweb.com/";
+const API_ROOT = "https://api.buzzweb.com/";
 const ENDPOINT_USER = "Users/";
 const ENDPOINT_SIGNUP = "Users/i";
 const ENDPOINT_TOKEN_STATUS = "Socials/instagram/profile_status?time_offset=";
